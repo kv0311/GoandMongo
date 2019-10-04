@@ -1,3 +1,4 @@
+package model
 type Hero struct {
     Name   string `json:"name"`
     Alias  string `json:"alias"`
