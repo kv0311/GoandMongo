@@ -8,4 +8,5 @@ import (
 func AddHeroesRouter(e *echo.Echo) {
 	e.GET("/addHero", handler.AddHeroes)
 	e.GET("/removeHero", handler.RemoveHeroes)
+	e.GET("/removeHeroFilter", handler.RemoveHeroesFilter)
 }

@@ -2,9 +2,10 @@ package repo
 
 import (
 	"context"
-	// "go.mongodb.org/mongo-driver/bson"
 	"fmt"
 	"log"
+
+	"go.mongodb.org/mongo-driver/bson"
 
 	"gitlab.ghn.vn/vinhnlk/gowithmongodb/model"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -44,6 +45,18 @@ func InsertOneHeroes(hero model.Hero) interface{} {
 }
 
 func RemoveOneHeroes(hero model.Hero) interface{} {
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	//set client options
+	fmt.Println(hero)
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	collection := client.Database("civilact").Collection("heroes")
+	removeHeroes, err := collection.DeleteOne(context.TODO(), hero)
+	if err != nil {
+		log.Fatalln("Error on remove Hero", err)
+	}
+	return removeHeroes
+}
+func RemoveOneHeroesFilter(hero bson.M) interface{} {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	//set client options
 	fmt.Println(hero)
