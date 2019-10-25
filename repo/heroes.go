@@ -8,8 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	"gitlab.ghn.vn/vinhnlk/gowithmongodb/model"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"gitlab.ghn.vn/vinhnlk/gowithmongodb/mongoconfig"
 	// "go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
@@ -32,10 +31,7 @@ import (
 //     return heroes
 // }
 func InsertOneHeroes(hero model.Hero) interface{} {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-	//set client options
-	client, err := mongo.Connect(context.TODO(), clientOptions)
-	collection := client.Database("civilact").Collection("heroes")
+	collection := mongoconfig.InitMongo("civilact", "heroes")
 	insertHeroes, err := collection.InsertOne(context.TODO(), hero)
 	if err != nil {
 		log.Fatalln("Error on inserting new Hero", err)
@@ -45,11 +41,7 @@ func InsertOneHeroes(hero model.Hero) interface{} {
 }
 
 func RemoveOneHeroes(hero model.Hero) interface{} {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-	//set client options
-	fmt.Println(hero)
-	client, err := mongo.Connect(context.TODO(), clientOptions)
-	collection := client.Database("civilact").Collection("heroes")
+	collection := mongoconfig.InitMongo("civilact", "heroes")
 	removeHeroes, err := collection.DeleteOne(context.TODO(), hero)
 	if err != nil {
 		log.Fatalln("Error on remove Hero", err)
@@ -57,16 +49,24 @@ func RemoveOneHeroes(hero model.Hero) interface{} {
 	return removeHeroes
 }
 func RemoveOneHeroesFilter(hero bson.M) interface{} {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-	//set client options
 	fmt.Println(hero)
-	client, err := mongo.Connect(context.TODO(), clientOptions)
-	collection := client.Database("civilact").Collection("heroes")
+	collection := mongoconfig.InitMongo("civilact", "heroes")
 	removeHeroes, err := collection.DeleteOne(context.TODO(), hero)
 	if err != nil {
 		log.Fatalln("Error on remove Hero", err)
 	}
 	return removeHeroes
+}
+
+func AddOneHeroesFilter(hero bson.M) interface{} {
+	fmt.Println(hero)
+	collection := mongoconfig.InitMongo("civilact", "heroes")
+	insertHeroes, err := collection.InsertOne(context.TODO(), hero)
+	if err != nil {
+		log.Fatalln("Error on inserting new Hero", err)
+	}
+	id := insertHeroes.InsertedID
+	return id
 }
 
 // func updateOneHeroes(client *mongo.Client,filter bson.M,filterReplace bson.M) interface{}{

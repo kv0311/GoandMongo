@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -30,13 +31,25 @@ func RemoveHeroes(c echo.Context) error {
 	repo.RemoveOneHeroes(hero)
 	return c.String(http.StatusOK, "delete hero success")
 }
+
 func RemoveHeroesFilter(c echo.Context) error {
 	hero := bson.M{}
 	err := c.Bind(&hero)
 	if err != nil {
 		log.Printf("%s", err)
 	}
-	log.Println(hero)
+	fmt.Println(hero)
 	repo.RemoveOneHeroesFilter(hero)
 	return c.String(http.StatusOK, "delete hero by filter success")
+}
+
+func AddHeroesFilter(c echo.Context) error {
+	hero := bson.M{}
+	err := c.Bind(&hero)
+	if err != nil {
+		log.Printf("%s", err)
+	}
+	fmt.Println(hero)
+	repo.AddOneHeroesFilter(hero)
+	return c.String(http.StatusOK, "add hero by filter success")
 }
